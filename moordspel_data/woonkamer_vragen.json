@@ -25,9 +25,9 @@
     },
     "vraag5":{
         "id": 5,
-        "description":"Welke twee componenten van telomerase zijn verantwoordelijk voor het verlengen van telomeren bij kwallen?",
+        "description":"Welke twee componenten van telomerase zijn verantwoordelijk voor het verlengen van telomeren bij kwallen? (Noem er een)",
         "code": 5,
-        "answer": ["TERT", "TERC"]
+        "answer": ["TERT TERC"]
     },
     "vraag6":{
         "id": 6,
@@ -37,7 +37,7 @@
     },
     "vraag7":{
         "id": 7,
-        "description":"Welke kwal kan zijn tentakels terug laten groeien als deze verloren zijn?",
+        "description":"Hoelang bestaan kwallen al in jaren?",
         "code": 7,
         "answer": ["500 miljoen jaar", "500000000", "meer dan 500 miljoen jaar", "vijfhonderd miljoen jaar", "500 miljoen"]
     },
@@ -45,6 +45,18 @@
         "id": 8,
         "description":"De perisarc van de kwal, is opgebouwd uit een bepaalde polysacharide. Deze polysacharide gebruiken ook andere dieren zoals krabben. Wat is een ander waterdier dat deze polysacharide gebruikt ter stevigheid van het exoskelet, voor berscherming?",
         "code": 8,
-        "answer": ["500 miljoen jaar", "500000000", "meer dan 500 miljoen jaar", "vijfhonderd miljoen jaar", "500 miljoen"]
+        "answer": ["Garnalen"]
+    },
+    "vraag9":{
+        "id": 9,
+        "description":"Hoe noem je de pulserende beweging dat een kwal gebruikt om zich voort te bewegen?",
+        "code": 9,
+        "answer": ["Jetpropulsie"]
+    },
+    "vraag10":{
+        "id": 10,
+        "description":"Wat zijn de opvallende kleuren van physalia physalis? (Noem er een)",
+        "code": 10,
+        "answer": ["Paars", "blauw", "roze"]
     }
 }
