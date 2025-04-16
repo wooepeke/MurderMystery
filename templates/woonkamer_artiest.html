@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}woonkamer_vragen{% endblock %}
+{% block title %}Artiest{% endblock %}
 
 {% block content %}
-    <h1>Het onderzoek</h1>
+    <h1></h1>
+
+    <br><br>
 
     {% for question_id, question_text in question_desc.items() %}
     <div class="question">
-        <form action="{{ url_for('woonkamer_vragen') }}" method="POST">
+        <form action="{{ url_for('woonkamer_artiest') }}" method="POST">
             <input type="hidden" name="question_id" value="{{ question_id }}">
             <label for="question{{ question_id }}">{{ question_text | safe }}</label>
             <div class="input-container">
@@ -27,6 +29,5 @@
 
     <br>
     <a href="{{ url_for('woonkamer') }}"><button>Terug naar Woonkamer</button></a>
-    <!-- <a href="{{ url_for('overzicht') }}"><button>Terug naar overzicht</button></a> -->
-    <br><br><br>
+
 {% endblock %}

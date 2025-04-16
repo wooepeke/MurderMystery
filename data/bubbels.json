@@ -2,11 +2,13 @@
     "team": "bubbels",
     "password": "123",
     "last_page": "overzicht",
-    "progress": 1,
+    "progress": 4,
     "questions": [
-        7
+        7,
+        4001
     ],
     "code_values": {
-        "7": 7
+        "7": 7,
+        "4001": 1
     }
 }

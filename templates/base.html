@@ -7,24 +7,43 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='blood.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navigationmenu.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <!-- Header -->
     <header>
         <!-- Loop through all teams and create progress bars for each -->
-        {% set team_list = teams.items()|list %}
-        {% for team, progress in team_list %}
-            <div class="team-progress">
-                <h3>{{ team|capitalize }} Progress</h3>
-                <div class="progress-container">
-                    <progress id="progressBar_{{ team }}" value="{{ progress }}" max="100"></progress>
-                    <span class="progress-text">{{ progress }}%</span>  <!-- Text inside progress bar -->
-                </div>
-            </div>
-        {% endfor %}
+        
     </header>
 
+    <!-- Navigation Menu (Fullscreen Overlay) -->
+    <div class="navigationmenu">
+        <input type="checkbox" id="active">
+        <label for="active" class="menu-btn"><span></span></label>
+        <label for="active" class="close"></label>
+        <div class="wrapper">
+            <ul>
+                {% set team_list = teams.items()|list %}
+                {% for team, progress in team_list %}
+                    <div class="team-progress">
+                        <h3>{{ team|capitalize }} Progress</h3>
+                        <div class="progress-container">
+                            <progress id="progressBar_{{ team }}" value="{{ progress }}" max="100"></progress>
+                            <span class="progress-text">{{ progress }}%</span>  <!-- Text inside progress bar -->
+                        </div>
+                    </div>
+                {% endfor %}
+                <li><a href="{{ url_for('overzicht') }}">Overzicht</a></li>
+                <li><a href="{{ url_for('woonkamer') }}">Woonkamer</a></li>
+                <li><a href="{{ url_for('tuin') }}">Tuin</a></li>
+            </ul>
+        </div>
+    </div>
+    
     <!-- Main Content -->
     <main>
         {% block content %}
@@ -59,3 +78,6 @@
     </script>
 </body>
 </html>
+
+
+  
