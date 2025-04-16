@@ -1,0 +1,8 @@
+{
+    "Turritopsis":{
+        "id": 5,
+        "description":"Welk proces stelt <i>T. Dohrnii</i> in staat om terug te keren naar een eerder ontwikkelingsstadium?",
+        "code": 1,
+        "answer": ["Transdifferentiatie"]
+    }
+}

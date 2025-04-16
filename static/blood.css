@@ -1,0 +1,91 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .title {
+    font-weight: 900;
+    font-size: clamp(40px, 8vw, 80px);
+    margin: 0;
+    filter: url(#goo);
+    position: relative;
+    letter-spacing: -3px; /* Changed from em to px */
+    color: #772020;
+    text-transform: uppercase;
+    padding: 8px 16px; /* Changed from em to px */
+    line-height: 1.2;
+    overflow: visible;
+
+  }
+  
+  .drop {
+    width: 10px; /* Changed from em to px */
+    height: 10px; /* Changed from em to px */
+    border-radius: 0 100% 100% 100%;
+    background-color: currentColor;
+    position: absolute;
+    top: 72%;
+    color: #772020;
+    animation: drop 3s infinite both;
+    outline: 2px solid #772020;
+  }
+  
+  .drop:nth-child(1) {
+    left: 14%;
+  }
+  
+  .drop:nth-child(2) {
+    left: 39%;
+    animation-delay: -0.4s;
+  }
+  
+  .drop:nth-child(3) {
+    left: 55%;
+    animation-delay: -1.5s;
+  }
+  
+  .drop:nth-child(4) {
+    left: 82%;
+    animation-delay: -0.8s;
+  }
+  
+  .drop:nth-child(5) {
+    left: 90.5%;
+    animation-delay: -1.3s;
+  }
+  
+  @keyframes drop {
+    0% {
+      transform: translateY(0) scaleX(0.85) rotate(45deg);
+      animation-timing-function: ease-out;
+    }
+    60% {
+      transform: translateY(120%) scaleX(0.85) rotate(45deg);
+      animation-timing-function: ease-in;
+      opacity: 255;
+    }
+    80%, 100% {
+      transform: translateY(300px) scaleX(0.85) rotate(45deg); /* Changed from vh to px */
+      opacity: 0;
+    }
+  }
+  
+  /* Media query for smaller screens */
+  @media (max-width: 768px) {
+    .title {
+      letter-spacing: 0px; /* Changed from em to px */
+      font-size: clamp(40px, 5vw, 60px);
+    }
+    
+    .drop {
+      width: 5px; /* Changed from em to px */
+      height: 5px; /* Changed from em to px */
+    }
+    
+  }

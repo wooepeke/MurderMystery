@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Default Title{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='blood.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <!-- Loop through all teams and create progress bars for each -->
+        {% set team_list = teams.items()|list %}
+        {% for team, progress in team_list %}
+            <div class="team-progress">
+                <h3>{{ team|capitalize }} Progress</h3>
+                <div class="progress-container">
+                    <progress id="progressBar_{{ team }}" value="{{ progress }}" max="100"></progress>
+                    <span class="progress-text">{{ progress }}%</span>  <!-- Text inside progress bar -->
+                </div>
+            </div>
+        {% endfor %}
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        <!-- Page content goes here -->
+        {% endblock %}
+    </main>
+
+    <!-- Footer (optional) -->
+    <!-- <footer>
+        <h6>&copy; 2025 Moordspel. All rights reserved.</h6>
+    </footer> -->
+
+    <script>
+        // Function to periodically check the progress of all teams
+        function checkProgress() {
+            $.get('/progress', function(data) {
+                // Update progress for each team dynamically
+                for (let team in data) {
+                    $('#progressBar_' + team).val(data[team]);
+                    $('span.progress-text:contains(' + team + ')').text(data[team] + '%');
+                }
+
+                // Continue checking progress every second
+                setTimeout(checkProgress, 1000);  // Check progress every second
+            });
+        }
+
+        // Start checking progress immediately when the page loads
+        $(document).ready(function() {
+            checkProgress();  // Start checking progress
+        });
+    </script>
+</body>
+</html>

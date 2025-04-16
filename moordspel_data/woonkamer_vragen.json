@@ -1,0 +1,50 @@
+{
+    "vraag1":{
+        "id": 1,
+        "description":"Welk proces stelt <i>T. Dohrnii</i> in staat om terug te keren naar een eerder ontwikkelingsstadium?",
+        "code": 1,
+        "answer": ["Transdifferentiatie"]
+    },
+    "vraag2":{
+        "id": 2,
+        "description":"Wat is de naam van de larvale fase waarin <i>T. Dohrnii</i> zich hecht aan een substraat?",
+        "code": 2,
+        "answer": ["Planula", "Planula larva"]
+    },
+    "vraag3":{
+        "id": 3,
+        "description":"Welke kwal kan obstakels ontwijken door zijn geavanceerde sensorische systemen?",
+        "code": 3,
+        "answer": ["Zeewesp", "Chironex fleckeri"]
+    },
+    "vraag4":{
+        "id": 4,
+        "description":"Welke structuur helpt kwallen zwaartekracht waar te nemen?",
+        "code": 4,
+        "answer": ["Statocyst", "Statocysten"]
+    },
+    "vraag5":{
+        "id": 5,
+        "description":"Welke twee componenten van telomerase zijn verantwoordelijk voor het verlengen van telomeren bij kwallen?",
+        "code": 5,
+        "answer": ["TERT", "TERC"]
+    },
+    "vraag6":{
+        "id": 6,
+        "description":"Welke kwal kan zijn tentakels terug laten groeien als deze verloren zijn?",
+        "code": 6,
+        "answer": ["Cladonema pacificum"]
+    },
+    "vraag7":{
+        "id": 7,
+        "description":"Welke kwal kan zijn tentakels terug laten groeien als deze verloren zijn?",
+        "code": 7,
+        "answer": ["500 miljoen jaar", "500000000", "meer dan 500 miljoen jaar", "vijfhonderd miljoen jaar", "500 miljoen"]
+    },
+    "vraag8":{
+        "id": 8,
+        "description":"De perisarc van de kwal, is opgebouwd uit een bepaalde polysacharide. Deze polysacharide gebruiken ook andere dieren zoals krabben. Wat is een ander waterdier dat deze polysacharide gebruikt ter stevigheid van het exoskelet, voor berscherming?",
+        "code": 8,
+        "answer": ["500 miljoen jaar", "500000000", "meer dan 500 miljoen jaar", "vijfhonderd miljoen jaar", "500 miljoen"]
+    }
+}

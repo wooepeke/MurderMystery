@@ -1,0 +1,109 @@
+/* Form Container */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: transparent;
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8.2px);
+    -webkit-backdrop-filter: blur(8.2px);
+    border: 1px solid rgba(255, 54, 54, 0.4);
+    width: 14em;
+    height: 14em;
+    margin: 0 auto; /* Center the form horizontally */
+  }
+  
+  /* Form Content */
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+  
+  /* Form Text */
+  .form p {
+    color: #fff;
+    font-weight: bolder;
+  }
+  
+  /* SVG Elements */
+  .path {
+    fill: #ff3636;
+  }
+  
+  .svg {
+    filter: blur(20px);
+    z-index: -1;
+    position: absolute;
+    opacity: 50%;
+    animation: anim 3s infinite;
+  }
+  
+  /* Input Container */
+  .inp {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 4px; /* Changed 'white-space' to 'padding' */
+  }
+  
+  /* Input Spacing */
+  .input + .input {
+    margin-left: 0.3em;
+  }
+  
+  /* Individual Inputs */
+  .input {
+    color: #fff;
+    height: 2em;
+    width: 2em;
+    float: left;
+    text-align: center;
+    background: transparent;
+    outline: none;
+    border: 1px #ff3636 solid;
+    border-radius: 10px;
+    transition: all 0.6s ease;
+  }
+  
+  .input:focus {
+    outline: none;
+    border: 1px #fff solid;
+  }
+  
+  .input:not(:placeholder-shown) {
+    opacity: 40%;
+  }
+  
+  /* Form Button */
+  .form button {
+    margin-left: auto;
+    margin-right: auto;
+    background-color: transparent;
+    color: #fff;
+    width: 8.5em;
+    height: 2.3em;
+    border: #ff3636 0.2em solid;
+    border-radius: 11px;
+    transition: all 0.5s ease;
+  }
+  
+  .form button:hover {
+    background-color: #ff3636;
+  }
+  
+  /* Animation */
+  @keyframes anim {
+    0% {
+      transform: translateY(-50px);
+      transform: translateX(-10px);
+    }
+    50% {
+      transform: translateY(70px);
+    }
+    100% {
+      transform: translateY(-50px);
+    }
+  }
