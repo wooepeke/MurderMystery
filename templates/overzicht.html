@@ -3,69 +3,53 @@
 {% block title %}Overzicht{% endblock %}
 
 {% block content %}
-    <!-- <h1>Team: {{ team|capitalize }}</h1>  -->
+  <div class="content-container">
+      <link href="https://fonts.googleapis.com/css?family=Raleway:300,500,700,900" rel="stylesheet">
+      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="width: 0;height: 0;">
+        <defs>
+          <filter id="goo">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 18 -7" result="goo" />
+            <feBlend in="SourceGraphic" in2="goo" />
+          </filter>
+        </defs>
+      </svg>
+      
+      <h1>Team</h1>
+      <h1 class="title">
+        {{ team|capitalize }}!
+        {% set text = team|capitalize + '!' %}
+        {% for char in text %}
+          <span class="drop"></span>
+        {% endfor %}
+      </h1>
 
-    <link href="https://fonts.googleapis.com/css?family=Raleway:300,500,700,900" rel="stylesheet">
-    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="width: 0;height: 0;">
-      <defs>
-        <filter id="goo">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
-          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 18 -7" result="goo" />
-          <feBlend in="SourceGraphic" in2="goo" />
-        </filter>
-      </defs>
-    </svg>
-    
-    <h1 class="title">
-      {{ team|capitalize }}!
-      {% set text = team|capitalize + '!' %}
-      {% for char in text %}
-        <span class="drop"></span>
-      {% endfor %}
-    </h1>
+      <br>
 
-    <!-- <section>
-        <ul class="code">
-          {% for digit in code_values %}
-          <li tabindex="0" class="digit">
-            <span>{{ digit }}</span>
-          </li>
-          {% endfor %}
-        </ul>
-    </section> -->
-
-    <br>
-    
-    <!-- From Uiverse.io by reshades --> 
-    <!-- <form class="form">
-        <div class="content">
-            <p align="center">OTP Verification</p>
-            <div class="inp">
-                <input placeholder="" type="text" class="input" maxlength="1">
-                <input placeholder="" type="text" class="input" maxlength="1"> 
-                <input placeholder="" type="text" class="input" maxlength="1"> 
-                <input placeholder="" type="text" class="input" maxlength="1"> 
-            </div>
-            <button>Verify</button>
-            <svg class="svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                <path fill="#4073ff" d="M56.8,-23.9C61.7,-3.2,45.7,18.8,26.5,31.7C7.2,44.6,-15.2,48.2,-35.5,36.5C-55.8,24.7,-73.9,-2.6,-67.6,-25.2C-61.3,-47.7,-30.6,-65.6,-2.4,-64.8C25.9,-64.1,51.8,-44.7,56.8,-23.9Z" transform="translate(100 100)" class="path"></path>
-            </svg>
+      <p>Vul Het Wachtwoord van de Ruimte in</p>
+      <form action="/overzicht" method="post">
+        <div class="input-container">
+          <input type="text" name="password" placeholder="Wachtwoord" required>
         </div>
-    </form> -->
+      </form>
 
-    <!-- <br> -->
-    
-    <!-- Add buttons that link to different pages -->
-    <a href="{{ url_for('woonkamer') }}">
-        <button>Woonkamer</button>
-    </a>
-    
-    <a href="{{ url_for('tuin') }}">
-        <button>Tuin</button>
-    </a>
-    
-    <!-- <a href="{{ url_for('gang') }}">
-        <button>Gang</button>
-    </a>
-     -->
+      <div class="icon-button-row">
+          <a href="{{ url_for('woonkamer') if woonkamer_enabled}}" class="trigger-fade">
+            <button class="icon-only-button trigger-fade" id="woonkamerButton" {% if not woonkamer_enabled %}disabled{% endif %}>
+                <div class="icon-container">
+                    <img src="/static/images/home.png" alt="Woonkamer">
+                </div>
+            </button>
+        </a>
+        
+        <a href="{{ url_for('tuin') if tuin_enabled}}" class="trigger-fade">
+            <button class="icon-only-button" id="tuinButton" {% if not tuin_enabled %}disabled{% endif %}>
+                <div class="icon-container">
+                    <img src="/static/images/spring.png" alt="Tuin">
+                </div>
+            </button>
+        </a>
+      </div>
+
+  </div>
 {% endblock %}

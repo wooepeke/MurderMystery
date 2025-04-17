@@ -3,31 +3,33 @@
 {% block title %}Artiest{% endblock %}
 
 {% block content %}
+<div class="content-container">
     <h1></h1>
 
     <br><br>
 
     {% for question_id, question_text in question_desc.items() %}
-    <div class="question">
-        <form action="{{ url_for('woonkamer_artiest') }}" method="POST">
-            <input type="hidden" name="question_id" value="{{ question_id }}">
-            <label for="question{{ question_id }}">{{ question_text | safe }}</label>
-            <div class="input-container">
-                <input type="text" id="question{{ question_id }}" name="answer" placeholder="Your answer here"
-                    {% if answers_status[question_id] == 'correct' %} 
-                        style="background-color: #4CAF50;" value="{{ answer_dict.get(question_id, '') }}"
-                    {% elif answers_status[question_id] == 'incorrect' %} 
-                        style="background-color: #f44336;" value="{{ answer_dict.get(question_id, '') }}"
-                    {% else %}
-                        value="{{ answer_dict.get(question_id, '') }}"
-                    {% endif %}>
-                <button type="submit">✔</button> <!-- Button is a square with check mark -->
-            </div>
-        </form>
+    <div class="question-container">
+        <div class="question">
+            <form action="{{ url_for('woonkamer_artiest') }}" method="POST">
+                <input type="hidden" name="question_id" value="{{ question_id }}">
+                <label for="question{{ question_id }}">{{ question_text | safe }}</label>
+                <div class="input-container {% if answers_status.get(question_id) == 'incorrect' %}shake{% endif %}">
+                    <input type="text" id="question{{ question_id }}" name="answer" placeholder="Vul in"
+                        {% if answers_status.get(question_id) == 'correct' %} 
+                            style="background-color: #74cb6a;" value="{{ answer_dict.get(question_id, '') }}"
+                        {% elif answers_status.get(question_id) == 'incorrect' %} 
+                            style="background-color: #dadada;" value="{{ answer_dict.get(question_id, '') }}"
+                        {% else %}
+                            value="{{ answer_dict.get(question_id, '') }}"
+                        {% endif %}>
+                </div>
+            </form>
+        </div>
     </div>
     {% endfor %}
 
     <br>
-    <a href="{{ url_for('woonkamer') }}"><button>Terug naar Woonkamer</button></a>
-
+    <a href="{{ url_for('woonkamer') }}" class="trigger-fade"><button>Terug naar Woonkamer</button></a>
+</div>
 {% endblock %}

@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}woonkamer_vragen{% endblock %}
+{% block title %}Artiest{% endblock %}
 
 {% block content %}
 <div class="content-container">
-    <h1>Het onderzoek</h1>
+    <h1>Vergelijk</h1>
 
     {% for question_id, question_text in question_desc.items() %}
     <div class="question-container">
         <div class="question">
-            <form action="{{ url_for('woonkamer_vragen') }}" method="POST">
+            <form action="{{ url_for('woonkamer_vergelijk') }}" method="POST">
                 <input type="hidden" name="question_id" value="{{ question_id }}">
                 <label for="question{{ question_id }}">{{ question_text | safe }}</label>
                 <div class="input-container {% if answers_status.get(question_id) == 'incorrect' %}shake{% endif %}">
@@ -25,12 +25,9 @@
             </form>
         </div>
     </div>
-    
     {% endfor %}
 
     <br>
-    <a href="{{ url_for('woonkamer') }} " class="trigger-fade"><button>Terug naar Woonkamer</button></a>
-    <!-- <a href="{{ url_for('overzicht') }}"><button>Terug naar overzicht</button></a> -->
+    <a href="{{ url_for('woonkamer') }}" class="trigger-fade"><button>Terug naar Woonkamer</button></a>
 </div>
-<br><br>
 {% endblock %}

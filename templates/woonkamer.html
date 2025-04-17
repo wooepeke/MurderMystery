@@ -3,6 +3,7 @@
 {% block title %}Woonkamer{% endblock %}
 
 {% block content %}
+<div class="content-container">
     <h1>Woonkamer</h1>
 
     <!-- <a href="{{ url_for('woonkamer_vragen') }}">
@@ -10,7 +11,7 @@
     </a> -->
 
     <div class="icon-button-row">
-        <a href="{{ url_for('woonkamer_vragen') }}">
+        <a href="{{ url_for('woonkamer_vragen') }}" class="trigger-fade">
             <button class="icon-only-button {% if research_unlocked %}success{% endif %}" id="researchButton">
                 <div class="icon-container">
                     <img src="/static/images/magnifying-glass.png" alt="Research">
@@ -18,7 +19,7 @@
             </button>
         </a>
     
-        <a href="{{ url_for('woonkamer_artiest') }}">
+        <a href="{{ url_for('woonkamer_artiest') }}" class="trigger-fade">
             <button class="icon-only-button {% if artist_unlocked %}success{% endif %}" id="artistButton">
                 <div class="icon-container">
                     <img src="/static/images/vinyl.png" alt="Research">
@@ -28,7 +29,7 @@
     </div>
 
     <div class="icon-button-row">
-        <a href="{{ url_for('woonkamer_vragen') }}">
+        <a href="{{ url_for('woonkamer_vergelijk') }}" class="trigger-fade">
             <button class="icon-only-button {% if image_unlocked %}success{% endif %}" id="imageButton">
                 <div class="icon-container">
                     <img src="/static/images/image.png" alt="Research">
@@ -36,7 +37,7 @@
             </button>
         </a>
     
-        <a href="{{ url_for('woonkamer_artiest') }}">
+        <a href="{{ url_for('woonkamer_vroeger') }}" class="trigger-fade">
             <button class="icon-only-button {% if camera_unlocked %}success{% endif %}" id="cameraButton">
                 <div class="icon-container">
                     <img src="/static/images/camera.png" alt="Research">
@@ -46,7 +47,7 @@
     </div>
 
     <div class="icon-button-row">
-        <a href="{{ url_for('woonkamer_vragen') }}">
+        <a href="{{ url_for('woonkamer_periodieksysteem') }}" class="trigger-fade">
             <button class="icon-only-button {% if flask_unlocked %}success{% endif %}" id="flaskButton">
                 <div class="icon-container">
                     <img src="/static/images/flask.png" alt="Research">
@@ -54,7 +55,7 @@
             </button>
         </a>
     
-        <a href="{{ url_for('woonkamer_artiest') }}">
+        <a href="{{ url_for('woonkamer_nummers') }}" class="trigger-fade">
             <button class="icon-only-button {% if lottery_unlocked %}success{% endif %}" id="lotteryButton">
                 <div class="icon-container">
                     <img src="/static/images/lottery.png" alt="Research">
@@ -64,5 +65,7 @@
     </div>
 
     <br>
-    <a href="{{ url_for('overzicht') }}"><button>Terug naar Overzicht</button></a>
+    <a href="{{ url_for('overzicht') }}" class="trigger-fade"><button>Terug naar Overzicht</button></a>
+</div>
+
 {% endblock %}

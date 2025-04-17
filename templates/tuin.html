@@ -2,7 +2,10 @@
 
 {% block title %}Tuin{% endblock %}
 
+
 {% block content %}
-    <h1>Tuin</h1>
-    <a href="{{ url_for('overzicht') }}"><button>Back to Overzicht</button></a>
+    <div class="content-container">
+        <h1>Tuin</h1>
+        <a href="{{ url_for('overzicht') }}"class="trigger-fade"><button>Back to Overzicht</button></a>
+    </div>
 {% endblock %}

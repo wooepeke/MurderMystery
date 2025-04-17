@@ -3,7 +3,7 @@ import os
 import json
 import threading
 import time
-import datetime
+import numpy as np
 
 data_folder = '/home/xavier/Personal/MurderMystery/data'
 moordspel_folder = '/home/xavier/Personal/MurderMystery/moordspel_data'
@@ -54,18 +54,6 @@ class ServerBackend():
                     team_data[team_name] = team_info.get('progress', 0)  # Default progress is 0
         return team_data
 
-    # Function to simulate a long-running task and update team progress
-    def long_running_task(self, team_name):
-        file_path = os.path.join(data_folder, f"{team_name}.json")
-        # for i in range(1, 101):  # Simulate progress from 1% to 100%
-        #     time.sleep(0.1)  # Simulating a task (could be replaced with real task)
-        #     with open(file_path, "r") as json_file:
-        #         team_data = json.load(json_file)
-        #     team_data['progress'] = i  # Update the progress
-        #     with open(file_path, "w") as json_file:
-        #         json.dump(team_data, json_file, indent=4)
-        pass
-
     def answer_question(self, location, question_id, answer, team_name):
         file_path = os.path.join(moordspel_folder, (str(location) + '.json'))
         moordspel_data = {}
@@ -73,7 +61,12 @@ class ServerBackend():
             # If the file exists, open and read the existing data
             with open(file_path, "r") as json_file:
                 moordspel_data = json.load(json_file)
-        
+                
+        team_path = os.path.join(data_folder, (str(team_name) + '.json'))
+
+        with open(team_path, "r") as json_file:
+            existing_data = json.load(json_file)
+
         for key in moordspel_data.keys():
             if moordspel_data[key]['id'] == question_id:
                 answers = []
@@ -83,23 +76,21 @@ class ServerBackend():
 
                 if answer.strip().lower() in answers:
                     status = 'correct'
-
-                    team_path = os.path.join(data_folder, (str(team_name) + '.json'))
-
-                    with open(team_path, "r") as json_file:
-                        existing_data = json.load(json_file)
                     
                     if not question_id in existing_data['questions']:
                         existing_data['questions'].append(question_id)
                         existing_data['progress'] += 1
                         existing_data['code_values'][question_id] = moordspel_data[key]['code']
+                        existing_data['timestamps'][time.time()] = question_id
                     else:
                         print("Already in set")
-                    
-                    with open(team_path, "w") as json_file:
-                        json.dump(existing_data, json_file, indent=4)
                 else:
-                    status = 'incorrect'
+                    if not question_id in existing_data['questions']:
+                        print(question_id)
+                        status = 'incorrect'
+
+                with open(team_path, "w") as json_file:
+                    json.dump(existing_data, json_file, indent=4)
 
                 return moordspel_data[key], status
         
@@ -129,9 +120,38 @@ class ServerBackend():
                 answers_status[moordspel_data[key]['id']] = 'correct'
                 answer_dict[moordspel_data[key]['id']] = ' / '.join(moordspel_data[key]['answer'])
             else:
-                answers_status[moordspel_data[key]['id']] = 'incorrect'
+                answers_status[moordspel_data[key]['id']] = 'none'
 
         return answers_status, answer_dict, question_desc
+
+    def switch_page(self, team_name, location):
+        answers_status = {}  # Initialize the answers_status dictionary
+        answer_dict = {}
+
+        team_data = server_backend.get_team_data()  # Get the current progress for all teams
+
+        # Check answer status for the team
+        answers_status, answer_dict, question_desc = server_backend.update_questions(location, team_name)
+        if request.method == "POST":
+            question_id = int(request.form['question_id'])  # Get the question id
+            answer = request.form['answer']  # Get the submitted answer
+
+            _, status = server_backend.answer_question(location, question_id, answer, team_name)
+
+            if status == 'correct':
+                answers_status[question_id] = 'correct'
+                answers_status, answer_dict, question_desc = server_backend.update_questions(location, team_name)
+            elif status == 'incorrect':
+                answers_status[question_id] = 'incorrect'
+            else:
+                answers_status[question_id] = 'none'
+
+        print(answers_status)
+        time.sleep(0.5)
+
+        # After processing the answer or for the initial page load, render the page with the answers_status
+        return render_template(f"{location}.html", team=team_name, teams=team_data, answers_status=answers_status, answer_dict=answer_dict, question_desc=question_desc, woonkamer_enabled=True, tuin_enabled=False)
+
 
 server_backend = ServerBackend()
 
@@ -190,6 +210,9 @@ def welkom():
             'progress': 0,  # Initialize progress to 0
             'questions': [],
             "code_values": {},
+            'start_time': 0,
+            'timestamps':{},
+            'unlocked_rooms':[],
         }
         
         # Make sure the folder exists
@@ -204,82 +227,116 @@ def welkom():
         response.set_cookie('team_name', team)
         return response
 
-@app.route("/overzicht")
+@app.route("/overzicht", methods=["GET","POST"])
 def overzicht():
+    password = str(request.form.get("password")).lower()
     team_name = request.cookies.get('team_name')  # Get the team name from the cookie
+
+    # Check for passwords
+    passwords = {}
+    if os.path.exists("moordspel_data/ww.json"):
+        # If the file exists, open and read the existing data
+        with open("moordspel_data/ww.json", "r") as json_file:
+            passwords = json.load(json_file)
+    
+    # Get team data
+    team_path = os.path.join(data_folder, (str(team_name) + '.json'))
+
+    with open(team_path, "r") as json_file:
+        existing_data = json.load(json_file)
+
+    for room, known_password in passwords.items():
+        if password == known_password:
+            if existing_data['start_time'] == 0:
+                existing_data['start_time'] = time.time()
+
+            # Add the password to the list
+            if not room in existing_data['unlocked_rooms']:
+                existing_data['unlocked_rooms'].append(room)
+            else:
+                print("Already in set")
+    
+    if 'woonkamer' in existing_data['unlocked_rooms']:
+        woonkamer_enabled = True
+    else:
+        woonkamer_enabled = False
+
+    if 'tuin' in existing_data['unlocked_rooms']:
+        tuin_enabled = True
+    else:
+        tuin_enabled = False
+
     if team_name:
         team_data = server_backend.get_team_data()  # Get the current progress for all teams
-        server_backend.code_values = ["*", "*", "*", "*", "*", "*", "*", "*"]
-        
-        team_path = os.path.join(data_folder, (str(team_name) + '.json'))
-
-        with open(team_path, "r") as json_file:
-            existing_data = json.load(json_file)
-
         show_code = False
         if show_code:
             for key in existing_data['code_values'].keys():
                 server_backend.code_values[int(key) - 1] = existing_data['code_values'][key]
+        
+        with open(team_path, "w") as json_file:
+            json.dump(existing_data, json_file, indent=4)
 
-        return render_template("overzicht.html", team=team_name, teams=team_data, code_values=server_backend.code_values)
+        return render_template(f"overzicht.html", team=team_name, teams=team_data, woonkamer_enabled=woonkamer_enabled, tuin_enabled=tuin_enabled)
     else:
         return redirect(url_for('home'))  # If no team is logged in, redirect to home page
 
 @app.route("/woonkamer_vragen", methods=["GET", "POST"])
 def woonkamer_vragen():
     team_name = request.cookies.get('team_name')  # Get the team name from the cookie
-    answers_status = {}  # Initialize the answers_status dictionary
-    answer_dict = {}
     location = 'woonkamer_vragen'
 
     if team_name:
-        team_data = server_backend.get_team_data()  # Get the current progress for all teams
-
-        # Check answer status for the team
-        answers_status, answer_dict, question_desc = server_backend.update_questions(location, team_name)
-        if request.method == "POST":
-            question_id = int(request.form['question_id'])  # Get the question id
-            answer = request.form['answer']  # Get the submitted answer
-
-            _, status = server_backend.answer_question(location, question_id, answer, team_name)
-
-            if status == 'correct':
-                answers_status[question_id] = 'correct'
-                answers_status, answer_dict, question_desc = server_backend.update_questions(location, team_name)
-            else:
-                answers_status[question_id] = 'incorrect'
-
-        # After processing the answer or for the initial page load, render the page with the answers_status
-        return render_template("woonkamer_vragen.html", team=team_name, teams=team_data, answers_status=answers_status, answer_dict=answer_dict, question_desc=question_desc)
+        return server_backend.switch_page(team_name, location)
     else:
         return redirect(url_for('home'))  # If no team is logged in, redirect to home page
 
 @app.route("/woonkamer_artiest", methods=["GET", "POST"])
 def woonkamer_artiest():
     team_name = request.cookies.get('team_name')  # Get the team name from the cookie
-    answers_status = {}  # Initialize the answers_status dictionary
-    answer_dict = {}
     location = 'woonkamer_artiest'
 
     if team_name:
-        team_data = server_backend.get_team_data()  # Get the current progress for all teams
+        return server_backend.switch_page(team_name, location)
+    else:
+        return redirect(url_for('home'))  # If no team is logged in, redirect to home page
 
-        # Check answer status for the team
-        answers_status, answer_dict, question_desc = server_backend.update_questions(location, team_name)
-        if request.method == "POST":
-            question_id = int(request.form['question_id'])  # Get the question id
-            answer = request.form['answer']  # Get the submitted answer
+@app.route("/woonkamer_vroeger", methods=["GET", "POST"])
+def woonkamer_vroeger():
+    team_name = request.cookies.get('team_name')  # Get the team name from the cookie
+    location = 'woonkamer_vroeger'
 
-            _, status = server_backend.answer_question(location, question_id, answer, team_name)
+    if team_name:
+        return server_backend.switch_page(team_name, location)
+    else:
+        return redirect(url_for('home'))  # If no team is logged in, redirect to home page
 
-            if status == 'correct':
-                answers_status[question_id] = 'correct'
-                answers_status, answer_dict, question_desc = server_backend.update_questions(location, team_name)
-            else:
-                answers_status[question_id] = 'incorrect'
+@app.route("/woonkamer_nummers", methods=["GET", "POST"])
+def woonkamer_nummers():
+    team_name = request.cookies.get('team_name')  # Get the team name from the cookie
+    location = 'woonkamer_nummers'
 
-        # After processing the answer or for the initial page load, render the page with the answers_status
-        return render_template("woonkamer_artiest.html", team=team_name, teams=team_data, answers_status=answers_status, answer_dict=answer_dict, question_desc=question_desc)
+    if team_name:
+        return server_backend.switch_page(team_name, location)
+    else:
+        return redirect(url_for('home'))  # If no team is logged in, redirect to home page
+
+@app.route("/woonkamer_vergelijk", methods=["GET", "POST"])
+def woonkamer_vergelijk():
+    team_name = request.cookies.get('team_name')  # Get the team name from the cookie
+    location = 'woonkamer_vergelijk'
+
+    if team_name:
+        return server_backend.switch_page(team_name, location)
+    else:
+        return redirect(url_for('home'))  # If no team is logged in, redirect to home page
+
+@app.route("/woonkamer_periodieksysteem", methods=["GET", "POST"])
+def woonkamer_periodieksysteem():
+    team_name = request.cookies.get('team_name')  # Get the team name from the cookie
+    location = 'woonkamer_periodieksysteem'
+
+    if team_name:
+        return server_backend.switch_page(team_name, location)
     else:
         return redirect(url_for('home'))  # If no team is logged in, redirect to home page
 
@@ -319,42 +376,36 @@ def tuin():
     else:
         return redirect(url_for('home'))  # If no team is logged in, redirect to home page
 
-@app.route("/gang", methods=["GET", "POST"])
-def gang():
-    team_name = request.cookies.get('team_name')  # Get the team name from the cookie
-    answers_status = {}  # Initialize the answers_status dictionary
-    answer_dict = {}
-    location = 'gang'
-
-    if team_name:
-        team_data = server_backend.get_team_data()  # Get the current progress for all teams
-
-        # Check answer status for the team
-        answers_status, answer_dict, question_desc = server_backend.update_questions(location, team_name)
-
-        if request.method == "POST":
-            question_id = int(request.form['question_id'])  # Get the question id
-            answer = request.form['answer']  # Get the submitted answer
-
-            _, status = server_backend.answer_question(location, question_id, answer, team_name)
-
-            if status == 'correct':
-                answers_status[question_id] = 'correct'
-                answers_status, answer_dict, question_desc = server_backend.update_questions(location, team_name)
-            else:
-                answers_status[question_id] = 'incorrect'
-
-        # After processing the answer or for the initial page load, render the page with the answers_status
-        return render_template("gang.html", team=team_name, teams=team_data, answers_status=answers_status, answer_dict=answer_dict, question_desc=question_desc)
-    else:
-        return redirect(url_for('home'))  # If no team is logged in, redirect to home page
-
-
-# Route to get the current progress of all teams
 @app.route('/progress')
 def get_progress():
     team_data = server_backend.get_team_data()  # Get the current progress for all teams
-    return jsonify(team_data)
+
+    team_name = request.cookies.get('team_name')
+
+    # Get team data
+    team_path = os.path.join(data_folder, (str(team_name) + '.json'))
+
+    with open(team_path, "r") as json_file:
+        existing_data = json.load(json_file)
+
+    if not existing_data['start_time'] == 0:
+        current_time = time.time()
+        # Assuming current_time and existing_data['start_time'] are timestamps
+        time_difference = np.round(current_time - existing_data['start_time'])
+
+        # Calculate hours, minutes, and seconds
+        hours = int(time_difference // 3600)  # 3600 seconds in an hour
+        minutes = int((time_difference % 3600) // 60)  # Remaining minutes
+        seconds = int(time_difference % 60)  # Remaining seconds
+
+        # Format the time as HH:MM:SS
+        formatted_time = f"{hours:02}:{minutes:02}:{seconds:02}"
+    else:
+        formatted_time = f"{0:02}:{0:02}:{0:02}"
+    
+    # Return team progress along with formatted time
+    return jsonify({'team_data': team_data, 'current_time': formatted_time})
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)

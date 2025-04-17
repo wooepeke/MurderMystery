@@ -8,24 +8,27 @@
 </head>
 
 <body>
-    <h1>Welkom tot het moordspel</h1>
+    <br>
+    <div class="content-container">
+        <h1>Welkom tot het moordspel</h1>
 
-    {% if team_name %}
-        <p>Je bent al ingelogd als team: {{ team_name }}</p>
-        <p>Je kunt nu doorgaan naar het overzicht!</p>
-        <a href="{{ url_for('overzicht') }}">Ga naar Overzicht</a>
-    {% else %}
-        <p>Vul hier jullie team naam en wachtwoord in!</p>
-        <form action="/welkom" method="post">
-            <input type="text" name="team" placeholder="Team Naam" required>
-            <input type="text" name="password" placeholder="Wachtwoord" required>
-            <button type="submit">Send</button>
-        </form>
-    {% endif %}
+        {% if team_name %}
+            <p>Je bent al ingelogd als team: {{ team_name }}</p>
+            <p>Je kunt nu doorgaan naar het overzicht!</p>
+            <a href="{{ url_for('overzicht') }}">Ga naar Overzicht</a>
+        {% else %}
+            <p>Vul hier jullie team naam en wachtwoord in!</p>
+            <form action="/welkom" method="post">
+                <input type="text" name="team" placeholder="Team Naam" required>
+                <input type="text" name="password" placeholder="Wachtwoord" required>
+                <button type="submit">Send</button>
+            </form>
+        {% endif %}
 
-    {% if response %}
-        <p><strong>Server Response:</strong></p>
-        <p>{{ response }}</p>
-    {% endif %}
+        {% if response %}
+            <p><strong>Server Response:</strong></p>
+            <p>{{ response }}</p>
+        {% endif %}
+    </div>
 </body>
 </html>

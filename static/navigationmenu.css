@@ -5,7 +5,7 @@
     font-family: 'Oswald', sans-serif; /* Only one will apply, so we keep the preferred */
 }
   
-.wrapper {
+.menu_button_wrapper {
     position: fixed;
     top: 0;
     right: -100%;
@@ -20,15 +20,15 @@
     align-items: center;
 }
   
-#active:checked ~ .wrapper {
+#active:checked ~ .menu_button_wrapper {
     right: 0;
 }
   
 .menu-btn {
     position: absolute;
     z-index: 999;
-    right: 20px;
-    top: 20px;
+    right: 0px;
+    top: 10px;
     height: 50px;
     width: 50px;
     text-align: center;
@@ -82,18 +82,18 @@
     border-color: #fff;
 }
   
-.wrapper ul {
+.menu_button_wrapper ul {
     /* Adjusted for better centering */
     position: relative;
     list-style: none;
     text-align: center;
     width: 100%;
     max-width: 600px;
-    /* Remove top and left positioning since wrapper is flexbox */
+    /* Remove top and left positioning since menu_button_wrapper is flexbox */
     transform: translateY(0);
 }
   
-.wrapper ul li {
+.menu_button_wrapper ul li {
     margin: 15px 0;
     /* Add flexbox for vertical centering of buttons */
     display: flex;
@@ -102,7 +102,7 @@
 }
   
 /* Button itself */
-.wrapper ul li a {
+.menu_button_wrapper ul li a {
     position: relative;
     display: flex;
     align-items: center;
@@ -124,7 +124,7 @@
 }
   
 /* Button background! */
-.wrapper ul li a::after {
+.menu_button_wrapper ul li a::after {
     content: "";
     position: absolute;
     top: 0;
@@ -138,16 +138,16 @@
     transition: transform 0.3s ease;
 }
   
-.wrapper ul li a:hover::after {
+.menu_button_wrapper ul li a:hover::after {
     transform: scaleY(1);
 }
   
-.wrapper ul li a:hover {
+.menu_button_wrapper ul li a:hover {
     color: #1a73e8;
 }
   
 /* Show links on active */
-#active:checked ~ .wrapper ul li a {
+#active:checked ~ .menu_button_wrapper ul li a {
     opacity: 1;
     transform: translateX(0); /* Changed from -100px to center properly */
     transition-timing-function: ease, cubic-bezier(0.1, 1.3, 0.3, 1);

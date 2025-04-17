@@ -1,0 +1,60 @@
+
+/* Make the content container properly handle the centering */
+.question-container {
+    display: inherit;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    box-sizing: border-box;
+    padding-left: 8px;
+    padding-right: 8px;
+    min-width: 100%;
+    padding-bottom: 5px;
+
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    /* backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px); */
+    border: 1px solid rgba(255, 255, 255, 0.3);  color: #ffffff;
+  
+}
+  
+  
+  .question-container:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    transform: translateY(0px);
+  }
+  
+  /* * {
+    outline: 1px solid red;
+  } */
+  
+  
+  /* Section styles for within the container */
+  .section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  
+  /* Card-style elements that could go inside the container */
+  .questioncard {
+    background-color: rgba(255, 0, 0, 0.6);
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.2s ease;
+  }
+  
+  .questioncard:hover {
+    transform: translateY(-3px);
+  }

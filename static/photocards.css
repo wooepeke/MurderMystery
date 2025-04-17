@@ -1,0 +1,89 @@
+*, *:after, *:before {
+	box-sizing: border-box;
+}
+
+img {
+	display: block;
+	max-width: 100%;
+}
+
+.photo_stack {
+	width: 50%;
+	max-width: 80vh;
+	transition: .25s ease;
+	&:hover {			
+		transform: rotate(5deg);
+		.photo_card:before {
+			transform: translatey(-2%) rotate(-4deg);
+		}	
+		.photo_card:after {
+			transform: translatey(2%) rotate(4deg);
+		}
+	}
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.photo_card {
+	aspect-ratio: 3 / 2;
+	border: 2px solid;
+	background-color: #FFF;
+	position: relative;
+	transition: .15s ease;
+	cursor: pointer;
+	padding: 5% 5% 15% 5%;
+    border-color: black;
+	&:before, &:after {
+		content: "";
+		display: block;
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		border: 2px solid;
+		background-color: #FFF;
+		transform-origin: center center;
+		z-index: -1;
+		transition: .15s ease;
+		top: 0;
+		left: 0;
+        border-color: black;
+	}
+	
+	&:before {
+		transform: translatey(-2%) rotate(-6deg);
+	}
+	
+	&:after {
+		transform: translatey(2%) rotate(6deg);
+	}
+	
+}
+	.photo_image {
+		width: 100%;
+		border: 2px solid;
+		background-color: #EEE;
+		aspect-ratio: 1 / 1;
+		position: relative;
+        border-color: black;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+	}
+
+    .photo_image input[type="image"] {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    
+.browser-warning {
+	margin-bottom: 4rem;
+}
+
+@supports (aspect-ratio: 1 / 1) {
+	.browser-warning {
+		display: none;
+	}
+}

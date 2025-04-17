@@ -1,83 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Default Title{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='blood.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='navigationmenu.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Default Title{% endblock %}</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='questioncards.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='blood.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='photocards.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='navigationmenu.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='background.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='chart.css') }}">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+
+  <!-- Icons & Libraries -->
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
-    <!-- Header -->
-    <header>
-        <!-- Loop through all teams and create progress bars for each -->
-        
-    </header>
-
-    <!-- Navigation Menu (Fullscreen Overlay) -->
+  <!-- Navigation -->
+  <header>
     <div class="navigationmenu">
-        <input type="checkbox" id="active">
-        <label for="active" class="menu-btn"><span></span></label>
-        <label for="active" class="close"></label>
-        <div class="wrapper">
-            <ul>
-                {% set team_list = teams.items()|list %}
-                {% for team, progress in team_list %}
-                    <div class="team-progress">
-                        <h3>{{ team|capitalize }} Progress</h3>
-                        <div class="progress-container">
-                            <progress id="progressBar_{{ team }}" value="{{ progress }}" max="100"></progress>
-                            <span class="progress-text">{{ progress }}%</span>  <!-- Text inside progress bar -->
-                        </div>
-                    </div>
-                {% endfor %}
-                <li><a href="{{ url_for('overzicht') }}">Overzicht</a></li>
-                <li><a href="{{ url_for('woonkamer') }}">Woonkamer</a></li>
-                <li><a href="{{ url_for('tuin') }}">Tuin</a></li>
-            </ul>
-        </div>
+      <input type="checkbox" id="active">
+      <label for="active" class="menu-btn"><span></span></label>
+      <label for="active" class="close"></label>
+      <div class="menu_button_wrapper">
+        <ul>
+          {% set team_list = teams.items()|list %}
+          {% for team, progress in team_list %}
+            <div class="team-progress">
+              <h3>{{ team|capitalize }} Progress</h3>
+              <div class="progress-container">
+                <progress id="progressBar_{{ team }}" value="{{ progress }}" max="100"></progress>
+                <span class="progress-text">{{ progress }}%</span>
+              </div>
+            </div>
+          {% endfor %}
+          <li><a href="{{ url_for('overzicht') }}" class="trigger-fade">Overzicht</a></li>
+          <li><a href="{{ url_for('woonkamer') if woonkamer_enabled}}" class="trigger-fade">Woonkamer</a></li>
+          <li><a href="{{ url_for('tuin') if tuin_enabled}}" class="trigger-fade">Tuin</a></li>
+        </ul>
+      </div>
     </div>
-    
-    <!-- Main Content -->
-    <main>
-        {% block content %}
-        <!-- Page content goes here -->
-        {% endblock %}
-    </main>
 
-    <!-- Footer (optional) -->
-    <!-- <footer>
-        <h6>&copy; 2025 Moordspel. All rights reserved.</h6>
-    </footer> -->
+    <div class="header-time">
+        <p>{{ current_time }}</p>
+      </div>
+  </header>
 
+  <!-- Background -->
+  <div class="background">
+    {% for _ in range(6) %}
+      <span class="ball"></span>
+    {% endfor %}
+  </div>
+
+  <!-- Main content -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer (optional) -->
+  <!-- <footer><h6>&copy; 2025 Moordspel. All rights reserved.</h6></footer> -->
+
+  <!-- Shared Scripts -->
+    {% block scripts %}
     <script>
-        // Function to periodically check the progress of all teams
+        // Update progress bars and time periodically
         function checkProgress() {
-            $.get('/progress', function(data) {
-                // Update progress for each team dynamically
-                for (let team in data) {
-                    $('#progressBar_' + team).val(data[team]);
-                    $('span.progress-text:contains(' + team + ')').text(data[team] + '%');
-                }
-
-                // Continue checking progress every second
-                setTimeout(checkProgress, 1000);  // Check progress every second
-            });
+        $.get('/progress', function(data) {
+            // Update progress bars
+            for (let team in data.team_data) {
+            $('#progressBar_' + team).val(data.team_data[team]);
+            $('#progressBar_' + team).next('.progress-text').text(data.team_data[team] + '%');
+            }
+    
+            // Update the time
+            $(".header-time p").text("" + data.current_time);
+            
+            // Call checkProgress again after 1 second
+            setTimeout(checkProgress, 1000);
+        });
         }
-
-        // Start checking progress immediately when the page loads
-        $(document).ready(function() {
-            checkProgress();  // Start checking progress
+    
+        $(document).ready(function () {
+        // Start updating progress and time
+        checkProgress();
         });
     </script>
+    
+
+    <script>
+      // Fade-out transition for links
+      document.addEventListener('DOMContentLoaded', () => {
+        const fadeLinks = document.querySelectorAll("a.trigger-fade");
+        fadeLinks.forEach(link => {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            document.body.classList.add("fade-out");
+            setTimeout(() => {
+              window.location.href = link.href;
+            }, 800);
+          });
+        });
+      });
+    </script>
+
+    <script>
+        // Save scroll position before leaving the page
+        window.addEventListener("beforeunload", function () {
+            localStorage.setItem("scrollPosition", window.scrollY);
+        });
+
+        // Restore scroll position on page load
+        window.addEventListener("load", function () {
+            const scrollPosition = localStorage.getItem("scrollPosition");
+            if (scrollPosition) {
+                window.scrollTo(0, parseInt(scrollPosition));
+            }
+        });
+    </script>
+  {% endblock %}
 </body>
 </html>
-
-
-  
